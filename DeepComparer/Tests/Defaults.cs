@@ -11,14 +11,15 @@ namespace Tests
         public static CollectionDescriptor Array(Type t)
         {
             return !t.IsArray ? null : new CollectionDescriptor(
-                CollectionKind.Equal, t.GetElementType(), x => (IEnumerable)x);
+                CollectionComparisonKind.Equal, 
+                t.GetElementType(), x => (IEnumerable)x);
         }
         public static CollectionDescriptor List(Type t)
         {
             if (!t.IsGenericType) return null;
             if (t.GetGenericTypeDefinition() != typeof(List<>)) return null;
             return new CollectionDescriptor(
-                CollectionKind.Equal, 
+                CollectionComparisonKind.Equal, 
                 t.GetGenericArguments()[0], 
                 x => (IEnumerable)x);
         }
@@ -27,7 +28,7 @@ namespace Tests
             if (!t.IsGenericType) return null;
             if (t.GetGenericTypeDefinition() != typeof(HashSet<>)) return null;
             return new CollectionDescriptor(
-                CollectionKind.Equivalent, 
+                CollectionComparisonKind.Equivalent, 
                 t.GetGenericArguments()[0], 
                 x => (IEnumerable)x);
         }
@@ -38,7 +39,7 @@ namespace Tests
                 x.GetGenericTypeDefinition() == typeof(IEnumerable<>));
             if (ifc == null) return null;
             return new CollectionDescriptor(
-                CollectionKind.Equal,
+                CollectionComparisonKind.Equal,
                 ifc.GetGenericArguments()[0],
                 x => (IEnumerable)x);
         }

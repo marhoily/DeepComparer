@@ -25,7 +25,7 @@ namespace Tests
             _comparer.Compare(a, b).Should().BeFalse();
             _comparer
                 .TreatAsCollection(p => !p.IsArray ? null :
-                    new CollectionDescriptor(CollectionKind.Equal, p.GetElementType(), x => (IEnumerable)x))
+                    new CollectionDescriptor(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
                 .Compare(a, b).Should().BeTrue();
         }
         [Fact]

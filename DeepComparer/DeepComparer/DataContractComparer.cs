@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using static DeepComparer.CollectionKind;
+using static DeepComparer.CollectionComparisonKind;
 
 namespace DeepComparer
 {
@@ -89,7 +89,7 @@ namespace DeepComparer
         {
             var xE = collection.Expand(xV);
             var yE = collection.Expand(yV);
-            switch (collection.Kind)
+            switch (collection.ComparisonKind)
             {
                 case Equal:
                     return CollectionEqual(xE, yE, 
@@ -127,19 +127,19 @@ namespace DeepComparer
 
     public sealed class CollectionDescriptor
     {
-        public CollectionKind Kind { get; }
+        public CollectionComparisonKind ComparisonKind { get; }
         public Type ItemType { get; }
         public Func<object, IEnumerable> Expand { get; }
 
-        public CollectionDescriptor(CollectionKind kind, Type itemType, Func<object, IEnumerable> expand)
+        public CollectionDescriptor(CollectionComparisonKind comparisonKind, Type itemType, Func<object, IEnumerable> expand)
         {
-            Kind = kind;
+            ComparisonKind = comparisonKind;
             ItemType = itemType;
             Expand = expand;
         }
     }
 
-    public enum CollectionKind
+    public enum CollectionComparisonKind
     {
         Equal,
         Equivalent,
