@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using static DeepComparer.CollectionKind;
@@ -9,9 +10,10 @@ namespace DeepComparer
     public sealed class DataContractComparer
     {
         private Func<PropertyInfo, bool> _propSelector = x => true;
-        private Func<Type, bool> _delveInto = x => false;
-        private Func<PropertyInfo, CollectionDescriptor>
-            _treatAsCollection = x => null;
+        private List<Func<Type, bool>> _delveInto =
+            new List<Func<Type, bool>>();
+        private List<Func<Type, CollectionDescriptor>>
+            _treatAsCollection = new List<Func<Type, CollectionDescriptor>>();
 
         private static readonly Func<object, object, bool> ObjEquals = Equals;
 
@@ -22,13 +24,13 @@ namespace DeepComparer
         }
         public DataContractComparer DelveInto(Func<Type, bool> func)
         {
-            _delveInto = func;
+            _delveInto.Add(func);
             return this;
         }
         public DataContractComparer TreatAsCollection(
-            Func<PropertyInfo, CollectionDescriptor> func)
+            Func<Type, CollectionDescriptor> func)
         {
-            _treatAsCollection = func;
+            _treatAsCollection.Add(func);
             return this;
         }
         public bool Compare(object x, object y)
@@ -48,8 +50,8 @@ namespace DeepComparer
                     continue;
                 if (xV == null || yV == null)
                     return false;
-                var collection = _treatAsCollection(p);
-                if (_delveInto(p.PropertyType))
+                var collection = IsCollection(p);
+                if (ShouldDelve(p.PropertyType))
                 {
                     if (collection != null)
                         throw new Exception("Can't be both!");
@@ -71,6 +73,18 @@ namespace DeepComparer
             return true;
         }
 
+        private bool ShouldDelve(Type propertyType)
+        {
+            return _delveInto.Any(predicate => predicate(propertyType));
+        }
+
+        private CollectionDescriptor IsCollection(PropertyInfo p)
+        {
+            return _treatAsCollection
+                .Select(predicate => predicate(p.PropertyType))
+                .FirstOrDefault(x => x != null);
+        }
+
         private bool CompareCollection(object xV, object yV, CollectionDescriptor collection)
         {
             var xE = collection.Expand(xV);
@@ -79,7 +93,7 @@ namespace DeepComparer
             {
                 case Equal:
                     return CollectionEqual(xE, yE, 
-                        _delveInto(collection.ItemType) ?  Compare : ObjEquals);
+                        ShouldDelve(collection.ItemType) ?  Compare : ObjEquals);
                 case Equivalent:
                     return CollectionEquivalent(xE, yE, collection.ItemType);
                 case EquivalentSkipDuplicates:
