@@ -19,8 +19,7 @@ namespace Tests
             var a = new X { Px = new X { I = 3 } };
             var b = new X { Px = new X { I = 3 } };
             _comparer.Compare(a, b).Should().BeFalse();
-            _comparer.DelveInto(
-                p => p.PropertyType.HasAttribute<DataContractAttribute>())
+            _comparer.DelveInto(p => p.HasAttribute<DataContractAttribute>())
                 .Compare(a, b).Should().BeTrue();
         }
         [Fact]
@@ -28,8 +27,7 @@ namespace Tests
         {
             var a = new X { Px = new X { I = 3 } };
             var b = new X { Px = new X { I = 4 } };
-            _comparer.DelveInto(
-                p => p.PropertyType.HasAttribute<DataContractAttribute>())
+            _comparer.DelveInto(p => p.HasAttribute<DataContractAttribute>())
                 .Compare(a, b).Should().BeFalse();
         }
 
