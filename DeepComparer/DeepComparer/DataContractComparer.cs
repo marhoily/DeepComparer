@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Reflection;
 
 namespace DeepComparer
 {
@@ -14,15 +15,15 @@ namespace DeepComparer
             var type = x.GetType();
             if (y.GetType() != type)
                 return false;
-            foreach (var p in _cache.Of(type).Properties.Where(_propSelector))
+            foreach (var p in type.GetProperties().Where(_propSelector))
             {
-                var xV = p[x];
-                var yV = p[y];
+                var xV = p.GetValue(x, null);
+                var yV = p.GetValue(y, null);
                 if (xV == null && yV == null)
                     continue;
                 if (xV == null || yV == null)
                     return false;
-                if (_delveInto(_cache.TypeOf(xV)))
+                if (_delveInto(xV.GetType()))
                 {
                     if (!Compare(xV, yV))
                         return false;
@@ -36,23 +37,19 @@ namespace DeepComparer
             return true;
         }
 
-        public DataContractComparer SelectProperties(Func<PropertyCache, bool> selector)
+        public DataContractComparer SelectProperties(Func<PropertyInfo, bool> selector)
         {
             _propSelector = selector;
             return this;
         }
 
 
-        private Func<PropertyCache, bool> _propSelector = x => true;
-        private readonly ReflectionCache _cache;
-        private Func<TypeCache, bool> _delveInto = x => false;
+        private Func<PropertyInfo, bool> _propSelector = x => true;
+        private readonly PropertyInfo _cache;
+        private Func<Type, bool> _delveInto = x => false;
 
-        public DataContractComparer(ReflectionCache cache)
-        {
-            _cache = cache;
-        }
 
-        public DataContractComparer DelveInto(Func<TypeCache, bool> func)
+        public DataContractComparer DelveInto(Func<Type, bool> func)
         {
             _delveInto = func;
             return this;
