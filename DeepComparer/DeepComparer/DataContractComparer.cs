@@ -23,7 +23,7 @@ namespace DeepComparer
                     continue;
                 if (xV == null || yV == null)
                     return false;
-                if (_delveInto(xV.GetType()))
+                if (_delveInto(p))
                 {
                     if (!Compare(xV, yV))
                         return false;
@@ -46,10 +46,10 @@ namespace DeepComparer
 
         private Func<PropertyInfo, bool> _propSelector = x => true;
         private readonly PropertyInfo _cache;
-        private Func<Type, bool> _delveInto = x => false;
+        private Func<PropertyInfo, bool> _delveInto = x => false;
 
 
-        public DataContractComparer DelveInto(Func<Type, bool> func)
+        public DataContractComparer DelveInto(Func<PropertyInfo, bool> func)
         {
             _delveInto = func;
             return this;

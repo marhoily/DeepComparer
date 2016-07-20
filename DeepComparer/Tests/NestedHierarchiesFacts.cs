@@ -21,7 +21,7 @@ namespace Tests
             var b = new X { Px = new X { I = 3 }, Py = _y1 };
             _comparer.Compare(a, b).Should().BeFalse();
             _comparer.DelveInto(
-                t => t.HasAttribute<DataContractAttribute>())
+                p => p.PropertyType.HasAttribute<DataContractAttribute>())
                 .Compare(a, b).Should().BeTrue();
         }
 
