@@ -12,17 +12,25 @@ namespace Tests
             new DataContractComparer();
 
         private readonly Y _y1 = new Y();
-        private readonly Y _y2 = new Y();
 
         [Fact]
-        public void DelveIn_Selector()
+        public void Deep_Equal()
         {
-            var a = new X { Px = new X { I = 3 }, Py = _y1 };
-            var b = new X { Px = new X { I = 3 }, Py = _y1 };
+            var a = new X { Px = new X { I = 3 } };
+            var b = new X { Px = new X { I = 3 } };
             _comparer.Compare(a, b).Should().BeFalse();
             _comparer.DelveInto(
                 p => p.PropertyType.HasAttribute<DataContractAttribute>())
                 .Compare(a, b).Should().BeTrue();
+        }
+        [Fact]
+        public void Deep_Different()
+        {
+            var a = new X { Px = new X { I = 3 } };
+            var b = new X { Px = new X { I = 4 } };
+            _comparer.DelveInto(
+                p => p.PropertyType.HasAttribute<DataContractAttribute>())
+                .Compare(a, b).Should().BeFalse();
         }
 
         [DataContract]
@@ -34,10 +42,6 @@ namespace Tests
             [DataMember]
             public int I { get; set; }
         }
-        public class Y
-        {
-            [DataMember]
-            public int I { get; set; }
-        }
+        public class Y{ }
     }
 }
