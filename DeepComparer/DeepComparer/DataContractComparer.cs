@@ -9,13 +9,14 @@ namespace DeepComparer
 {
     public sealed class DataContractComparer
     {
-        private Func<PropertyInfo, bool> _propSelector = x => true;
-        private List<Func<Type, bool>> _delveInto =
-            new List<Func<Type, bool>>();
-        private List<Func<Type, CollectionDescriptor>>
-            _treatAsCollection = new List<Func<Type, CollectionDescriptor>>();
-
         private static readonly Func<object, object, bool> ObjEquals = Equals;
+        private Func<PropertyInfo, bool> _propSelector = x => true;
+        private readonly List<Func<Type, bool>> 
+            _delveInto = new List<Func<Type, bool>>();
+        private readonly List<Func<Type, CollectionDescriptor>>
+            _treatAsCollection = new List<Func<Type, CollectionDescriptor>>();
+        private readonly Dictionary<Type, Func<object, object, bool>> 
+            _rules = new Dictionary<Type, Func<object, object, bool>>();
 
         public DataContractComparer SelectProperties(Func<PropertyInfo, bool> selector)
         {
@@ -27,10 +28,14 @@ namespace DeepComparer
             _delveInto.Add(func);
             return this;
         }
-        public DataContractComparer TreatAsCollection(
-            Func<Type, CollectionDescriptor> func)
+        public DataContractComparer TreatAsCollection(Func<Type, CollectionDescriptor> func)
         {
             _treatAsCollection.Add(func);
+            return this;
+        }
+        public DataContractComparer RuleFor<T>(Func<T, T, bool> func)
+        {
+            _rules.Add(typeof(T), (x, y) => func((T)x, (T)y));
             return this;
         }
         public bool Compare(object x, object y)
@@ -51,18 +56,26 @@ namespace DeepComparer
                 if (xV == null || yV == null)
                     return false;
                 var collection = IsCollection(p);
+                Func<object, object, bool> customRule;
+                _rules.TryGetValue(p.PropertyType, out customRule);
                 if (ShouldDelve(p.PropertyType))
                 {
-                    if (collection != null)
+                    if (collection != null || customRule != null)
                         throw new Exception("Can't be both!");
                     if (!Compare(xV, yV))
                         return false;
                 }
                 else if (collection != null)
                 {
+                    if (customRule != null)
+                        throw new Exception("Can't be both!");
                     if (!CompareCollection(xV, yV, collection))
                         return false;
-
+                }
+                else if (customRule != null)
+                {
+                    if (!customRule(xV, yV))
+                        return false;
                 }
                 else
                 {
@@ -123,6 +136,8 @@ namespace DeepComparer
         {
             throw new NotImplementedException();
         }
+
+
     }
 
     public sealed class CollectionDescriptor

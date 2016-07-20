@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CollectionFacts.cs" />
+    <Compile Include="CustomComparatorsFacts.cs" />
     <Compile Include="DataContractComparerFacts.cs" />
     <Compile Include="Defaults.cs" />
     <Compile Include="NestedHierarchiesFacts.cs" />
