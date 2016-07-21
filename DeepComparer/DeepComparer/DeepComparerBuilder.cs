@@ -13,17 +13,17 @@ namespace DeepComparison
             _objectExpander.SelectProperties(selector);
             return this;
         }
-        public DeepComparerBuilder DelveInto(Func<Type, bool> func)
+        public DeepComparerBuilder ExpandObjects(Func<Type, bool> func)
         {
             _rulesContainer.DelveInto(func);
             return this;
         }
-        public DeepComparerBuilder TreatAsCollection(Func<Type, TreatObjectAs.Collection> func)
+        public DeepComparerBuilder ExpandCollections(Func<Type, TreatObjectAs.Collection> func)
         {
             _rulesContainer.TreatAsCollection(func);
             return this;
         }
-        public DeepComparerBuilder RuleFor<T>(Func<T, T, bool> func)
+        public DeepComparerBuilder CustomRuleFor<T>(Func<T, T, bool> func)
         {
             _rulesContainer.RuleFor(func);
             return this;

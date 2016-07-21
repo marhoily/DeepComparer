@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace DeepComparison
 {
-    public sealed class ObjectExpander
+    internal sealed class ObjectExpander
     {
         private Func<PropertyInfo, bool> _propSelector = x => true;
 

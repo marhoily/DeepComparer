@@ -24,8 +24,8 @@ namespace Tests
             var b = new X { A = new[] { _x1 } };
             _comparer.Build().Compare(a, b, typeof(X)).Should().BeFalse();
             _comparer
-                .DelveInto(t => t == typeof(X))
-                .TreatAsCollection(p => !p.IsArray ? null :
+                .ExpandObjects(t => t == typeof(X))
+                .ExpandCollections(p => !p.IsArray ? null :
                     new TreatObjectAs.Collection(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
@@ -36,7 +36,7 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x2 } };
             _comparer
-                .TreatAsCollection(Defaults.Array)
+                .ExpandCollections(Defaults.Array)
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeFalse();
         }
@@ -47,9 +47,9 @@ namespace Tests
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             _comparer
-                .DelveInto(t => t == typeof(X))
-                .TreatAsCollection(Defaults.Array)
-                .TreatAsCollection(Defaults.List)
+                .ExpandObjects(t => t == typeof(X))
+                .ExpandCollections(Defaults.Array)
+                .ExpandCollections(Defaults.List)
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }
@@ -59,8 +59,8 @@ namespace Tests
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             _comparer
-                .DelveInto(t => t == typeof(X))
-                .TreatAsCollection(Defaults.Enumerable)
+                .ExpandObjects(t => t == typeof(X))
+                .ExpandCollections(Defaults.Enumerable)
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }

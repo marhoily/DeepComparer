@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace DeepComparison
 {
-    public sealed class RulesContainer
+    internal sealed class RulesContainer
     {
         private readonly List<Func<Type, TreatObjectAs>>
             _byFunc = new List<Func<Type, TreatObjectAs>>();

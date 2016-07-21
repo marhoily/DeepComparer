@@ -40,7 +40,7 @@ namespace Tests
         public void When_Same_Prop_Should_True()
         {
             _comparer
-                .DelveInto(t => t == typeof(X))
+                .ExpandObjects(t => t == typeof(X))
                 .Build()
                 .Compare(new X { I = 3 }, new X { I = 3 }, typeof(X))
                 .Should().BeTrue();
@@ -48,7 +48,7 @@ namespace Tests
         [Fact]
         public void When_Different_Types_Should_False()
         {
-            _comparer.DelveInto(t => t == typeof(X));
+            _comparer.ExpandObjects(t => t == typeof(X));
             Assert.Throws<TargetException>(()
                 => _comparer.Build().Compare(new X(), new Y(), typeof(X)));
         }
@@ -61,7 +61,7 @@ namespace Tests
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeFalse();
             _comparer
-                .DelveInto(t => t == typeof(X))
+                .ExpandObjects(t => t == typeof(X))
                 .SelectProperties(p => p.HasAttribute<DataMemberAttribute>())
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();

@@ -43,11 +43,11 @@
     <Compile Include="Internals\CachingDictionary.cs" />
     <Compile Include="CollectionComparisonKind.cs" />
     <Compile Include="TreatObjectAs.cs" />
-    <Compile Include="RulesContainer.cs" />
+    <Compile Include="Internals\RulesContainer.cs" />
     <Compile Include="DeepComparer.cs" />
     <Compile Include="DeepComparerBuilder.cs" />
     <Compile Include="Internals\EnumerableExt.cs" />
-    <Compile Include="ObjectExpander.cs" />
+    <Compile Include="Internals\ObjectExpander.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

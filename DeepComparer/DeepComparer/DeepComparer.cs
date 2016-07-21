@@ -10,7 +10,7 @@ namespace DeepComparison
         private readonly RulesContainer _rulesContainer;
         private readonly CachingDictionary<Type, FCompare> _cache;
 
-        public DeepComparer(
+        internal DeepComparer(
             ObjectExpander objectExpander,
             RulesContainer rulesContainer)
         {

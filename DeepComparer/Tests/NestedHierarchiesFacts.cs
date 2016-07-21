@@ -22,7 +22,7 @@ namespace Tests
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeFalse();
             _comparer
-                .DelveInto(p => p.HasAttribute<DataContractAttribute>())
+                .ExpandObjects(p => p.HasAttribute<DataContractAttribute>())
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }
@@ -31,7 +31,7 @@ namespace Tests
         {
             var a = new X { Px = new X { I = 3 } };
             var b = new X { Px = new X { I = 4 } };
-            _comparer.DelveInto(p => p.HasAttribute<DataContractAttribute>())
+            _comparer.ExpandObjects(p => p.HasAttribute<DataContractAttribute>())
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeFalse();
         }
