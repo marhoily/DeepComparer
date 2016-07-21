@@ -1,5 +1,5 @@
 ﻿using System.Runtime.Serialization;
-using DeepComparer;
+using DeepComparison;
 using FluentAssertions;
 using FluentAssertions.Common;
 using Xunit;
@@ -8,8 +8,8 @@ namespace Tests
 {
     public sealed class NestedHierarchiesFacts
     {
-        private readonly DataContractComparerBuilder _comparer =
-            new DataContractComparerBuilder();
+        private readonly DeepComparerBuilder _comparer =
+            new DeepComparerBuilder();
 
         private readonly Y _y1 = new Y();
 

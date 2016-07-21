@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
 
-namespace DeepComparer
+namespace DeepComparison
 {
-    public static class EnumerableExt
+    internal static class EnumerableExt
     {
         public static bool SequenceEqual(this IEnumerable xE, IEnumerable yE, Func<object, object, bool> compare)
         {

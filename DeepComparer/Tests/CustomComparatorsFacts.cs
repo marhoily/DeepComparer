@@ -1,5 +1,5 @@
 ﻿using System;
-using DeepComparer;
+using DeepComparison;
 using FluentAssertions;
 using Xunit;
 
@@ -7,8 +7,8 @@ namespace Tests
 {
     public class CustomComparatorsFacts
     {
-        private readonly DataContractComparerBuilder _comparer =
-            new DataContractComparerBuilder();
+        private readonly DeepComparerBuilder _comparer =
+            new DeepComparerBuilder();
         public class X
         {
             public int I { get; set; }

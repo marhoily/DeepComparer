@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace DeepComparer
+namespace DeepComparison
 {
     [Serializable]
-    public sealed class CachingDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+    internal sealed class CachingDictionary<TKey, TValue> : Dictionary<TKey, TValue>
     {
         private readonly Func<TKey, TValue> _factory;
 

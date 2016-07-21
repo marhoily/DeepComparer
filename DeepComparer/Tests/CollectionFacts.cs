@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using DeepComparer;
+using DeepComparison;
 using FluentAssertions;
 using Xunit;
 
@@ -9,8 +9,8 @@ namespace Tests
 {
     public sealed class CollectionFacts
     {
-        private readonly DataContractComparerBuilder _comparer =
-            new DataContractComparerBuilder();
+        private readonly DeepComparerBuilder _comparer =
+            new DeepComparerBuilder();
 
         private readonly X _x1 = new X();
         private readonly X _x2 = new X();

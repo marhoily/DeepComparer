@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace DeepComparer
+namespace DeepComparison
 {
     public abstract class TreatObjectAs
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DeepComparer
+namespace DeepComparison
 {
     public sealed class RulesContainer
     {

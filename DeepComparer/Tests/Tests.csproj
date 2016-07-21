@@ -76,9 +76,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeepComparer\DeepComparer.csproj">
+    <ProjectReference Include="..\DeepComparer\DeepComparison.csproj">
       <Project>{1248EA7B-35DF-4EE2-9B67-3E82E9A42414}</Project>
-      <Name>DeepComparer</Name>
+      <Name>DeepComparison</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

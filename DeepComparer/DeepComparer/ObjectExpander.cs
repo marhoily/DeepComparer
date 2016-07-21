@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace DeepComparer
+namespace DeepComparison
 {
     public sealed class ObjectExpander
     {

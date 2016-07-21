@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepComparer", "DeepComparer\DeepComparer.csproj", "{1248EA7B-35DF-4EE2-9B67-3E82E9A42414}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepComparison", "DeepComparer\DeepComparison.csproj", "{1248EA7B-35DF-4EE2-9B67-3E82E9A42414}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{00089F8D-FF3A-43C7-B74A-6F1FE3F30CCF}"
 EndProject

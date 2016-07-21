@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.Serialization;
-using DeepComparer;
+using DeepComparison;
 using FluentAssertions;
 using FluentAssertions.Common;
 using Xunit;
@@ -9,8 +9,8 @@ namespace Tests
 {
     public class DataContractComparerFacts
     {
-        private readonly DataContractComparerBuilder _comparer =
-            new DataContractComparerBuilder();
+        private readonly DeepComparerBuilder _comparer =
+            new DeepComparerBuilder();
 
         [Fact]
         public void Null_And_NonNull_Should_False()

@@ -7,8 +7,8 @@
     <ProjectGuid>{1248EA7B-35DF-4EE2-9B67-3E82E9A42414}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DeepComparer</RootNamespace>
-    <AssemblyName>DeepComparer</AssemblyName>
+    <RootNamespace>DeepComparison</RootNamespace>
+    <AssemblyName>DeepComparison</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,13 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CachingDictionary.cs" />
+    <Compile Include="Internals\CachingDictionary.cs" />
     <Compile Include="CollectionComparisonKind.cs" />
     <Compile Include="TreatObjectAs.cs" />
     <Compile Include="RulesContainer.cs" />
-    <Compile Include="DataContractComparer.cs" />
-    <Compile Include="DataContractComparerBuilder.cs" />
-    <Compile Include="EnumerableExt.cs" />
+    <Compile Include="DeepComparer.cs" />
+    <Compile Include="DeepComparerBuilder.cs" />
+    <Compile Include="Internals\EnumerableExt.cs" />
     <Compile Include="ObjectExpander.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

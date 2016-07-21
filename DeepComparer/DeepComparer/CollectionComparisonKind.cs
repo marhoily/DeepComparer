@@ -1,4 +1,4 @@
-namespace DeepComparer
+namespace DeepComparison
 {
     public enum CollectionComparisonKind
     {
