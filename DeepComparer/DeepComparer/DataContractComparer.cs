@@ -10,7 +10,6 @@ namespace DeepComparer
     using FCompare = Func<object, object, bool>;
     public sealed class DataContractComparer
     {
-        private static readonly FCompare ObjEquals = Equals;
         private Func<PropertyInfo, bool> _propSelector = x => true;
         private readonly List<Func<Type, bool>>
             _delveInto = new List<Func<Type, bool>>();
@@ -18,8 +17,7 @@ namespace DeepComparer
             _treatAsCollection = new List<Func<Type, CollectionDescriptor>>();
         private readonly Dictionary<Type, FCompare>
             _rules = new Dictionary<Type, FCompare>();
-        private readonly CachingDictionary<Type, FCompare>
-            _comparers = new CachingDictionary<Type, FCompare>(_ => Equals);
+        private readonly CachingDictionary<Type, FCompare> _comparers;
 
         public DataContractComparer SelectProperties(Func<PropertyInfo, bool> selector)
         {
@@ -36,11 +34,15 @@ namespace DeepComparer
             _treatAsCollection.Add(func);
             return this;
         }
-        
         public DataContractComparer RuleFor<T>(Func<T, T, bool> func)
         {
             _rules.Add(typeof(T), (x, y) => func((T)x, (T)y));
             return this;
+        }
+
+        public DataContractComparer()
+        {
+            _comparers = new CachingDictionary<Type, FCompare>(GetComparer);
         }
 
         private FCompare GetComparer(Type formalType)
@@ -112,10 +114,7 @@ namespace DeepComparer
             switch (collection.ComparisonKind)
             {
                 case Equal:
-                    return CollectionEqual(xE, yE,
-                        ShouldDelve(collection.ItemType)
-                            ? (a, b) => Compare(a, b, collection.ItemType)
-                            : ObjEquals);
+                    return CollectionEqual(xE, yE, GetComparer(collection.ItemType));
                 case Equivalent:
                     return CollectionEquivalent(xE, yE, collection.ItemType);
                 case EquivalentSkipDuplicates:
@@ -147,26 +146,5 @@ namespace DeepComparer
         }
 
 
-    }
-
-    public sealed class CollectionDescriptor
-    {
-        public CollectionComparisonKind ComparisonKind { get; }
-        public Type ItemType { get; }
-        public Func<object, IEnumerable> Expand { get; }
-
-        public CollectionDescriptor(CollectionComparisonKind comparisonKind, Type itemType, Func<object, IEnumerable> expand)
-        {
-            ComparisonKind = comparisonKind;
-            ItemType = itemType;
-            Expand = expand;
-        }
-    }
-
-    public enum CollectionComparisonKind
-    {
-        Equal,
-        Equivalent,
-        EquivalentSkipDuplicates
     }
 }

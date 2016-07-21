@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CachingDictionary.cs" />
+    <Compile Include="CollectionComparisonKind.cs" />
+    <Compile Include="CollectionDescriptor.cs" />
     <Compile Include="DataContractComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
