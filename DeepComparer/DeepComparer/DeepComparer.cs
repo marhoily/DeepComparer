@@ -19,6 +19,10 @@ namespace DeepComparison
             _cache = new CachingDictionary<Type, FCompare>(GetComparer);
         }
 
+        public bool Compare<T>(T x, T y)
+        {
+            return _cache.Get(typeof(T))(x, y);
+        }
         public bool Compare(object x, object y, Type formalType)
         {
             return _cache.Get(formalType)(x, y);

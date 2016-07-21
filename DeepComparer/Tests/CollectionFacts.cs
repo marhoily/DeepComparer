@@ -22,13 +22,13 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
-            _comparer.Build().Compare(a, b, typeof(X)).Should().BeFalse();
+            _comparer.Build().Compare(a, b).Should().BeFalse();
             _comparer
                 .ExpandObjects(t => t == typeof(X))
                 .ExpandCollections(p => !p.IsArray ? null :
                     new TreatObjectAs.Collection(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeTrue();
+                .Compare(a, b).Should().BeTrue();
         }
         [Fact]
         public void Deep_Unequal()
@@ -38,7 +38,7 @@ namespace Tests
             _comparer
                 .ExpandCollections(Defaults.Array)
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeFalse();
+                .Compare(a, b).Should().BeFalse();
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Tests
                 .ExpandCollections(Defaults.Array)
                 .ExpandCollections(Defaults.List)
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeTrue();
+                .Compare(a, b).Should().BeTrue();
         }
         [Fact]
         public void Treat_Enumerable()
@@ -62,7 +62,7 @@ namespace Tests
                 .ExpandObjects(t => t == typeof(X))
                 .ExpandCollections(Defaults.Enumerable)
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeTrue();
+                .Compare(a, b).Should().BeTrue();
         }
 
         public class X

@@ -17,7 +17,7 @@ namespace Tests
         {
             _comparer
                 .Build()
-                .Compare(null, new X { I = 3 }, typeof(X))
+                .Compare(null, new X { I = 3 })
                 .Should().BeFalse();
         }
         [Fact]
@@ -25,7 +25,7 @@ namespace Tests
         {
             _comparer
                 .Build()
-                .Compare(null, null, typeof(X))
+                .Compare<X>(null, null)
                 .Should().BeTrue();
         }
         [Fact]
@@ -33,7 +33,7 @@ namespace Tests
         {
             _comparer
                 .Build()
-                .Compare(new X { I = 3 }, new X { I = 4 }, typeof(X))
+                .Compare(new X { I = 3 }, new X { I = 4 })
                 .Should().BeFalse();
         }
         [Fact]
@@ -42,7 +42,7 @@ namespace Tests
             _comparer
                 .ExpandObjects(t => t == typeof(X))
                 .Build()
-                .Compare(new X { I = 3 }, new X { I = 3 }, typeof(X))
+                .Compare(new X { I = 3 }, new X { I = 3 })
                 .Should().BeTrue();
         }
         [Fact]
@@ -59,12 +59,12 @@ namespace Tests
             var b = new X { I = 3, J = 2 };
             _comparer
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeFalse();
+                .Compare(a, b).Should().BeFalse();
             _comparer
                 .ExpandObjects(t => t == typeof(X))
                 .SelectProperties(p => p.HasAttribute<DataMemberAttribute>())
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeTrue();
+                .Compare(a, b).Should().BeTrue();
         }
         public class X
         {

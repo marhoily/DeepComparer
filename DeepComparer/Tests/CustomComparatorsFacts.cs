@@ -20,7 +20,7 @@ namespace Tests
                 .ExpandObjects(t => t == typeof(X))
                 .CustomRuleFor<int>((x, y) => Math.Abs(x - y) < 2)
                 .Build()
-                .Compare(new X { I = 3 }, new X { I = 4 }, typeof(X))
+                .Compare(new X { I = 3 }, new X { I = 4 })
                 .Should().BeTrue();
         }
         [Fact]
@@ -30,7 +30,7 @@ namespace Tests
                 .ExpandObjects(t => t == typeof(X))
                 .CustomRuleFor<int>((x, y) => Math.Abs(x - y) < 2)
                 .Build()
-                .Compare(new X { I = 3 }, new X { I = 40 }, typeof(X))
+                .Compare(new X { I = 3 }, new X { I = 40 })
                 .Should().BeFalse();
         }
 

@@ -11,8 +11,6 @@ namespace Tests
         private readonly DeepComparerBuilder _comparer =
             new DeepComparerBuilder();
 
-        private readonly Y _y1 = new Y();
-
         [Fact]
         public void Deep_Equal()
         {
@@ -20,11 +18,11 @@ namespace Tests
             var b = new X { Px = new X { I = 3 } };
             _comparer
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeFalse();
+                .Compare(a, b).Should().BeFalse();
             _comparer
                 .ExpandObjects(p => p.HasAttribute<DataContractAttribute>())
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeTrue();
+                .Compare(a, b).Should().BeTrue();
         }
         [Fact]
         public void Deep_Different()
@@ -33,7 +31,7 @@ namespace Tests
             var b = new X { Px = new X { I = 4 } };
             _comparer.ExpandObjects(p => p.HasAttribute<DataContractAttribute>())
                 .Build()
-                .Compare(a, b, typeof(X)).Should().BeFalse();
+                .Compare(a, b).Should().BeFalse();
         }
 
         [DataContract]
@@ -41,10 +39,8 @@ namespace Tests
         {
             [DataMember]
             public X Px { get; set; }
-            public Y Py { get; set; }
             [DataMember]
             public int I { get; set; }
         }
-        public class Y{ }
     }
 }
