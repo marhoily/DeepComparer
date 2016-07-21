@@ -67,8 +67,7 @@
   <ItemGroup>
     <Compile Include="ExpandCollectionFacts.cs" />
     <Compile Include="CustomFacts.cs" />
-    <Compile Include="DataContractComparerFacts.cs" />
-    <Compile Include="Defaults.cs" />
+    <Compile Include="ComparerFacts.cs" />
     <Compile Include="ExpandObjectFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

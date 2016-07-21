@@ -10,7 +10,7 @@ namespace Tests
     public sealed class ExpandCollectionFacts
     {
         private readonly DeepComparerBuilder
-            _comparer = new DeepComparerBuilder()
+            _builder = new DeepComparerBuilder()
                 .ExpandObjects(t => t == typeof(X));
 
         private readonly X _x1 = new X();
@@ -21,7 +21,7 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
-            _comparer.Build().Compare(a, b).Should().BeFalse();
+            _builder.Build().Compare(a, b).Should().BeFalse();
 
         }
         [Fact]
@@ -29,7 +29,7 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
-            _comparer
+            _builder
                 .ExpandCollections(p => !p.IsArray ? null :
                     new TreatObjectAs.Collection(
                         Equal, 
@@ -43,7 +43,7 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x2 } };
-            _comparer
+            _builder
                 .ExpandCollections(Defaults.Array)
                 .Build()
                 .Compare(a, b).Should().BeFalse();
@@ -54,7 +54,7 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
-            _comparer
+            _builder
                 .ExpandCollections(Defaults.Array)
                 .ExpandCollections(Defaults.List)
                 .Build()
@@ -65,7 +65,7 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
-            _comparer
+            _builder
                 .ExpandCollections(Defaults.Enumerable)
                 .Build()
                 .Compare(a, b).Should().BeTrue();
