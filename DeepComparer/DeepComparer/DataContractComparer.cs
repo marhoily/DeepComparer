@@ -7,16 +7,19 @@ using static DeepComparer.CollectionComparisonKind;
 
 namespace DeepComparer
 {
+    using FCompare = Func<object, object, bool>;
     public sealed class DataContractComparer
     {
-        private static readonly Func<object, object, bool> ObjEquals = Equals;
+        private static readonly FCompare ObjEquals = Equals;
         private Func<PropertyInfo, bool> _propSelector = x => true;
         private readonly List<Func<Type, bool>>
             _delveInto = new List<Func<Type, bool>>();
         private readonly List<Func<Type, CollectionDescriptor>>
             _treatAsCollection = new List<Func<Type, CollectionDescriptor>>();
-        private readonly Dictionary<Type, Func<object, object, bool>>
-            _rules = new Dictionary<Type, Func<object, object, bool>>();
+        private readonly Dictionary<Type, FCompare>
+            _rules = new Dictionary<Type, FCompare>();
+        private readonly CachingDictionary<Type, FCompare>
+            _comparers = new CachingDictionary<Type, FCompare>(_ => Equals);
 
         public DataContractComparer SelectProperties(Func<PropertyInfo, bool> selector)
         {
@@ -33,20 +36,17 @@ namespace DeepComparer
             _treatAsCollection.Add(func);
             return this;
         }
+        
         public DataContractComparer RuleFor<T>(Func<T, T, bool> func)
         {
             _rules.Add(typeof(T), (x, y) => func((T)x, (T)y));
             return this;
         }
-        public bool Compare(object x, object y, Type formalType)
-        {
-            if (x == null && y == null)
-                return true;
-            if (x == null || y == null)
-                return false;
 
+        private FCompare GetComparer(Type formalType)
+        {
             var collection = IsCollection(formalType);
-            Func<object, object, bool> customRule;
+            FCompare customRule;
             _rules.TryGetValue(formalType, out customRule);
             var shouldDelve = ShouldDelve(formalType);
             var countWays = 0;
@@ -56,17 +56,26 @@ namespace DeepComparer
             if (countWays > 1) throw new Exception("Can't be both!");
             if (shouldDelve)
             {
-                return CompareProperties(x, y, formalType);
+                return (x, y) => CompareProperties(x, y, formalType);
             }
             if (collection != null)
             {
-                return CompareCollection(x, y, collection);
+                return (x, y) => CompareCollection(x, y, collection);
             }
             if (customRule != null)
             {
-                return customRule(x, y);
+                return customRule;
             }
-            return Equals(x, y);
+            return Equals;
+        }
+        public bool Compare(object x, object y, Type formalType)
+        {
+            if (x == null && y == null)
+                return true;
+            if (x == null || y == null)
+                return false;
+            
+            return GetComparer(formalType)(x, y);
         }
 
         private bool CompareProperties(object x, object y, Type formalType)
@@ -116,7 +125,7 @@ namespace DeepComparer
             }
         }
 
-        private static bool CollectionEqual(IEnumerable xE, IEnumerable yE, Func<object, object, bool> compare)
+        private static bool CollectionEqual(IEnumerable xE, IEnumerable yE, FCompare compare)
         {
             var xEr = xE.GetEnumerator();
             var yEr = yE.GetEnumerator();
