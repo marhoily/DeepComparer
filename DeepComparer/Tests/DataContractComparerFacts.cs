@@ -1,13 +1,11 @@
 ﻿using System.Reflection;
-using System.Runtime.Serialization;
 using DeepComparison;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Xunit;
 
 namespace Tests
 {
-    public class DataContractComparerFacts
+    public sealed class DataContractComparerFacts
     {
         private readonly DeepComparerBuilder _comparer =
             new DeepComparerBuilder();
@@ -52,30 +50,8 @@ namespace Tests
             Assert.Throws<TargetException>(()
                 => _comparer.Build().Compare(new X(), new Y(), typeof(X)));
         }
-        [Fact]
-        public void Should_Select_Properties()
-        {
-            var a = new X { I = 3 };
-            var b = new X { I = 3, J = 2 };
-            _comparer
-                .Build()
-                .Compare(a, b).Should().BeFalse();
-            _comparer
-                .ExpandObjects(t => t == typeof(X))
-                .SelectProperties(p => p.HasAttribute<DataMemberAttribute>())
-                .Build()
-                .Compare(a, b).Should().BeTrue();
-        }
-        public class X
-        {
-            [DataMember]
-            public int I { get; set; }
-            public int J { get; set; }
-        }
-        public class Y
-        {
-            [DataMember]
-            public int I { get; set; }
-        }
+
+        public class X { public int I { get; set; } }
+        public class Y { public int I { get; set; } }
     }
 }

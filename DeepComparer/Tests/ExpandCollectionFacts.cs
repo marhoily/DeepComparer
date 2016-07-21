@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using DeepComparison;
 using FluentAssertions;
 using Xunit;
+using static DeepComparison.CollectionComparisonKind;
 
 namespace Tests
 {
-    public sealed class CollectionFacts
+    public sealed class ExpandCollectionFacts
     {
         private readonly DeepComparerBuilder
             _comparer = new DeepComparerBuilder()
@@ -16,14 +17,24 @@ namespace Tests
         private readonly X _x2 = new X {S = new HashSet<X>()};
 
         [Fact]
-        public void Deep_Equal()
+        public void False_Unless_Expand()
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
             _comparer.Build().Compare(a, b).Should().BeFalse();
+
+        }
+        [Fact]
+        public void True_When_Expanded()
+        {
+            var a = new X { A = new[] { _x1 } };
+            var b = new X { A = new[] { _x1 } };
             _comparer
                 .ExpandCollections(p => !p.IsArray ? null :
-                    new TreatObjectAs.Collection(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
+                    new TreatObjectAs.Collection(
+                        Equal, 
+                        p.GetElementType(),
+                        x => (IEnumerable)x))
                 .Build()
                 .Compare(a, b).Should().BeTrue();
         }
@@ -39,7 +50,7 @@ namespace Tests
         }
 
         [Fact]
-        public void Treat_Two()
+        public void Expand_Two()
         {
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
@@ -50,7 +61,7 @@ namespace Tests
                 .Compare(a, b).Should().BeTrue();
         }
         [Fact]
-        public void Treat_Enumerable()
+        public void Expand_Enumerable()
         {
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
