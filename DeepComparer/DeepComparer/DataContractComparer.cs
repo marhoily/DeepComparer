@@ -36,8 +36,24 @@ namespace DeepComparer
         }
         public DataContractComparer RuleFor<T>(Func<T, T, bool> func)
         {
-            _rules.Add(typeof(T), (x, y) => func((T)x, (T)y));
+            _rules.Add(typeof(T), (x, y) =>
+            {
+                if (x == null && y == null)
+                    return true;
+                if (x == null || y == null)
+                    return false; return func((T) x, (T) y);
+            });
             return this;
+        }
+        private bool ShouldDelve(Type propertyType)
+        {
+            return _delveInto.Any(predicate => predicate(propertyType));
+        }
+        private CollectionDescriptor IsCollection(Type propertyType)
+        {
+            return _treatAsCollection
+                .Select(predicate => predicate(propertyType))
+                .FirstOrDefault(x => x != null);
         }
 
         public DataContractComparer()
@@ -72,45 +88,28 @@ namespace DeepComparer
         }
         public bool Compare(object x, object y, Type formalType)
         {
-            if (x == null && y == null)
-                return true;
-            if (x == null || y == null)
-                return false;
-            
             return GetComparer(formalType)(x, y);
         }
-
         private bool CompareProperties(object x, object y, Type formalType)
         {
-            foreach (var p in formalType.GetProperties().Where(_propSelector))
-            {
-                var xV = p.GetValue(x, null);
-                var yV = p.GetValue(y, null);
-                if (xV == null && yV == null)
-                    continue;
-                if (xV == null || yV == null)
-                    return false;
-                if (!Compare(xV, yV, p.PropertyType)) return false;
-            }
-            return true;
+            if (x == null && y == null) return true;
+            if (x == null || y == null) return false;
+            return formalType
+                .GetProperties()
+                .Where(_propSelector)
+                .All(p => Compare(
+                    p.GetValue(x, null), 
+                    p.GetValue(y, null), 
+                    p.PropertyType));
         }
 
-        private bool ShouldDelve(Type propertyType)
-        {
-            return _delveInto.Any(predicate => predicate(propertyType));
-        }
 
-        private CollectionDescriptor IsCollection(Type propertyType)
+        private bool CompareCollection(object x, object y, CollectionDescriptor collection)
         {
-            return _treatAsCollection
-                .Select(predicate => predicate(propertyType))
-                .FirstOrDefault(x => x != null);
-        }
-
-        private bool CompareCollection(object xV, object yV, CollectionDescriptor collection)
-        {
-            var xE = collection.Expand(xV);
-            var yE = collection.Expand(yV);
+            if (x == null && y == null) return true;
+            if (x == null || y == null) return false;
+            var xE = collection.Expand(x);
+            var yE = collection.Expand(y);
             switch (collection.ComparisonKind)
             {
                 case Equal:
@@ -123,7 +122,6 @@ namespace DeepComparer
                     throw new ArgumentOutOfRangeException();
             }
         }
-
         private static bool CollectionEqual(IEnumerable xE, IEnumerable yE, FCompare compare)
         {
             var xEr = xE.GetEnumerator();
@@ -135,7 +133,6 @@ namespace DeepComparer
             }
             return !yEr.MoveNext();
         }
-
         private bool CollectionEquivalent(IEnumerable xE, IEnumerable yE, Type itemType)
         {
             throw new NotImplementedException();
@@ -144,7 +141,5 @@ namespace DeepComparer
         {
             throw new NotImplementedException();
         }
-
-
     }
 }
