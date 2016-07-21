@@ -75,8 +75,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DeepComparer\DeepComparison.csproj">
-      <Project>{1248EA7B-35DF-4EE2-9B67-3E82E9A42414}</Project>
+    <ProjectReference Include="..\DeepComparison\DeepComparison.csproj">
+      <Project>{1248ea7b-35df-4ee2-9b67-3e82e9a42414}</Project>
       <Name>DeepComparison</Name>
     </ProjectReference>
   </ItemGroup>
