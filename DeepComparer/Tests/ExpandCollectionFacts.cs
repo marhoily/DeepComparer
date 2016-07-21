@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using DeepComparison;
 using FluentAssertions;
 using Xunit;
-using static DeepComparison.CollectionComparisonKind;
+using static DeepComparison.CollectionComparison;
 
 namespace Tests
 {
@@ -42,7 +42,7 @@ namespace Tests
             _builder
                 .GoDeepFor(t => !t.IsArray ? null :
                     new TreatObjectAs.Collection(
-                        Equal,
+                        Sequential,
                         t.GetElementType(),
                         x => (IEnumerable)x))
                 .Build()

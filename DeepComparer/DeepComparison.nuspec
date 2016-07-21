@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>DeepComparison</id>
+    <version>$version$</version>
+    <authors>Ilya Margolin</authors>
+    <projectUrl>https://github.com/marhoily/DeepComparer </projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Deep comparison of .net objects</summary>
+    <description>Deep equal library done right</description>
+    <tags>deep deeply equal equals equality compare comparer comparison structural</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\DeepComparison.dll" target="lib\net452\DeepComparison.dll" />
+    <file src="bin\Release\DeepComparison.XML" target="lib\net452\DeepComparison.XML" />
+  </files>
+</package>

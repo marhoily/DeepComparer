@@ -20,6 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>bin\Debug\DeepComparison.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +30,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\DeepComparison.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -42,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Collections.cs" />
     <Compile Include="Internals\CachingDictionary.cs" />
-    <Compile Include="CollectionComparisonKind.cs" />
+    <Compile Include="CollectionComparison.cs" />
     <Compile Include="TreatObjectAs.cs" />
     <Compile Include="Internals\RulesContainer.cs" />
     <Compile Include="DeepComparer.cs" />

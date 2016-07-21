@@ -4,6 +4,7 @@ namespace DeepComparison
 {
     using FCompare = Func<object, object, bool>;
 
+    /// <summary>A class with Compare() method</summary>
     public sealed class DeepComparer
     {
         private readonly ObjectExpander _objectExpander;
@@ -19,10 +20,21 @@ namespace DeepComparison
             _cache = new CachingDictionary<Type, FCompare>(GetComparer);
         }
 
+        /// <summary>Compares two objects deeply</summary>
+        /// <typeparam name="T">objects formal type. 
+        ///     By default comparer doesn't care about runtime types 
+        ///     of the arguments</typeparam>
         public bool Compare<T>(T x, T y)
         {
             return _cache.Get(typeof(T))(x, y);
         }
+        /// <summary>Compares two objects deeply</summary>
+        /// <param name="x">an object to compare</param>
+        /// <param name="y">an object to compare</param>
+        /// <param name="formalType">objects formal type. 
+        ///     By default comparer doesn't care about runtime types 
+        ///     of the arguments</param>
+        /// <returns>true when equal</returns>
         public bool Compare(object x, object y, Type formalType)
         {
             return _cache.Get(formalType)(x, y);
@@ -45,7 +57,7 @@ namespace DeepComparison
             if (x == null || y == null) return false;
             var xE = collection.ToEnumerable(x);
             var yE = collection.ToEnumerable(y);
-            if (collection.ComparisonKind == CollectionComparisonKind.Equal)
+            if (collection.Comparison == CollectionComparison.Sequential)
                 return xE.SequenceEqual(yE, _cache.Get(collection.ItemType));
             throw new NotImplementedException();
         }
