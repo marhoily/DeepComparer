@@ -11,7 +11,7 @@ configuration:
   - Release
 
 before_build:
-  nuget restore **\packages.config
+  nuget restore DeepComparison\packages.config
 
 cache:
   - packages -> **\packages.config
