@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using DeepComparison;
 using FluentAssertions;
 using Xunit;
@@ -9,13 +8,12 @@ namespace Tests
 {
     public sealed class CollectionFacts
     {
-        private readonly DeepComparerBuilder _comparer =
-            new DeepComparerBuilder();
+        private readonly DeepComparerBuilder
+            _comparer = new DeepComparerBuilder()
+                .ExpandObjects(t => t == typeof(X));
 
         private readonly X _x1 = new X();
-        private readonly X _x2 = new X();
-        private readonly X _x3 = new X();
-
+        private readonly X _x2 = new X {S = new HashSet<X>()};
 
         [Fact]
         public void Deep_Equal()
@@ -24,7 +22,6 @@ namespace Tests
             var b = new X { A = new[] { _x1 } };
             _comparer.Build().Compare(a, b).Should().BeFalse();
             _comparer
-                .ExpandObjects(t => t == typeof(X))
                 .ExpandCollections(p => !p.IsArray ? null :
                     new TreatObjectAs.Collection(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
                 .Build()
@@ -47,7 +44,6 @@ namespace Tests
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             _comparer
-                .ExpandObjects(t => t == typeof(X))
                 .ExpandCollections(Defaults.Array)
                 .ExpandCollections(Defaults.List)
                 .Build()
@@ -59,7 +55,6 @@ namespace Tests
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             _comparer
-                .ExpandObjects(t => t == typeof(X))
                 .ExpandCollections(Defaults.Enumerable)
                 .Build()
                 .Compare(a, b).Should().BeTrue();
