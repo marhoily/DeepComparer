@@ -11,11 +11,11 @@ namespace DeepComparer
     {
         private static readonly Func<object, object, bool> ObjEquals = Equals;
         private Func<PropertyInfo, bool> _propSelector = x => true;
-        private readonly List<Func<Type, bool>> 
+        private readonly List<Func<Type, bool>>
             _delveInto = new List<Func<Type, bool>>();
         private readonly List<Func<Type, CollectionDescriptor>>
             _treatAsCollection = new List<Func<Type, CollectionDescriptor>>();
-        private readonly Dictionary<Type, Func<object, object, bool>> 
+        private readonly Dictionary<Type, Func<object, object, bool>>
             _rules = new Dictionary<Type, Func<object, object, bool>>();
 
         public DataContractComparer SelectProperties(Func<PropertyInfo, bool> selector)
@@ -45,6 +45,32 @@ namespace DeepComparer
             if (x == null || y == null)
                 return false;
 
+            var collection = IsCollection(formalType);
+            Func<object, object, bool> customRule;
+            _rules.TryGetValue(formalType, out customRule);
+            var shouldDelve = ShouldDelve(formalType);
+            var countWays = 0;
+            if (collection != null) countWays++;
+            if (shouldDelve) countWays++;
+            if (customRule != null) countWays++;
+            if (countWays > 1) throw new Exception("Can't be both!");
+            if (shouldDelve)
+            {
+                return CompareProperties(x, y, formalType);
+            }
+            if (collection != null)
+            {
+                return CompareCollection(x, y, collection);
+            }
+            if (customRule != null)
+            {
+                return customRule(x, y);
+            }
+            return Equals(x, y);
+        }
+
+        private bool CompareProperties(object x, object y, Type formalType)
+        {
             foreach (var p in formalType.GetProperties().Where(_propSelector))
             {
                 var xV = p.GetValue(x, null);
@@ -53,33 +79,7 @@ namespace DeepComparer
                     continue;
                 if (xV == null || yV == null)
                     return false;
-                var collection = IsCollection(p);
-                Func<object, object, bool> customRule;
-                _rules.TryGetValue(p.PropertyType, out customRule);
-                if (ShouldDelve(p.PropertyType))
-                {
-                    if (collection != null || customRule != null)
-                        throw new Exception("Can't be both!");
-                    if (!Compare(xV, yV, p.PropertyType))
-                        return false;
-                }
-                else if (collection != null)
-                {
-                    if (customRule != null)
-                        throw new Exception("Can't be both!");
-                    if (!CompareCollection(xV, yV, collection))
-                        return false;
-                }
-                else if (customRule != null)
-                {
-                    if (!customRule(xV, yV))
-                        return false;
-                }
-                else
-                {
-                    if (!Equals(xV, yV))
-                        return false;
-                }
+                if (!Compare(xV, yV, p.PropertyType)) return false;
             }
             return true;
         }
@@ -89,10 +89,10 @@ namespace DeepComparer
             return _delveInto.Any(predicate => predicate(propertyType));
         }
 
-        private CollectionDescriptor IsCollection(PropertyInfo p)
+        private CollectionDescriptor IsCollection(Type propertyType)
         {
             return _treatAsCollection
-                .Select(predicate => predicate(p.PropertyType))
+                .Select(predicate => predicate(propertyType))
                 .FirstOrDefault(x => x != null);
         }
 

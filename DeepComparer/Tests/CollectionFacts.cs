@@ -24,6 +24,7 @@ namespace Tests
             var b = new X { A = new[] { _x1 } };
             _comparer.Compare(a, b, typeof(X)).Should().BeFalse();
             _comparer
+                .DelveInto(t => t == typeof(X))
                 .TreatAsCollection(p => !p.IsArray ? null :
                     new CollectionDescriptor(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
                 .Compare(a, b, typeof(X)).Should().BeTrue();
@@ -44,6 +45,7 @@ namespace Tests
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             _comparer
+                .DelveInto(t => t == typeof(X))
                 .TreatAsCollection(Defaults.Array)
                 .TreatAsCollection(Defaults.List)
                 .Compare(a, b, typeof(X)).Should().BeTrue();
@@ -54,6 +56,7 @@ namespace Tests
             var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             _comparer
+                .DelveInto(t => t == typeof(X))
                 .TreatAsCollection(Defaults.Enumerable)
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }
