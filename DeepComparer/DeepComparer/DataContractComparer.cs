@@ -9,14 +9,14 @@ namespace DeepComparer
     public sealed class DataContractComparer
     {
         private readonly ObjectExpander _objectExpander;
-        private readonly CompareRules _rules;
+        private readonly RulesContainer _rulesContainer;
         private readonly CachingDictionary<Type, FCompare> _cache;
 
         public DataContractComparer(
             ObjectExpander objectExpander,
-            CompareRules rules)
+            RulesContainer rulesContainer)
         {
-            _rules = rules;
+            _rulesContainer = rulesContainer;
             _objectExpander = objectExpander;
             _cache = new CachingDictionary<Type, FCompare>(GetComparer);
         }
@@ -27,7 +27,7 @@ namespace DeepComparer
         }
         private FCompare GetComparer(Type formalType)
         {
-            var compareOption = _rules[formalType];
+            var compareOption = _rulesContainer[formalType];
             if (compareOption == PropertiesBag)
                 return (x, y) => _objectExpander.CompareProperties(x, y, formalType, Compare);
             var collection = compareOption as Collection;

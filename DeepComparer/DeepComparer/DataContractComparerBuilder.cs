@@ -6,7 +6,7 @@ namespace DeepComparer
     public sealed class DataContractComparerBuilder
     {
         private readonly ObjectExpander _objectExpander = new ObjectExpander();
-        private readonly CompareRules _rules = new CompareRules();
+        private readonly RulesContainer _rulesContainer = new RulesContainer();
 
         public DataContractComparerBuilder SelectProperties(Func<PropertyInfo, bool> selector)
         {
@@ -15,23 +15,23 @@ namespace DeepComparer
         }
         public DataContractComparerBuilder DelveInto(Func<Type, bool> func)
         {
-            _rules.DelveInto(func);
+            _rulesContainer.DelveInto(func);
             return this;
         }
         public DataContractComparerBuilder TreatAsCollection(Func<Type, TreatObjectAs.Collection> func)
         {
-            _rules.TreatAsCollection(func);
+            _rulesContainer.TreatAsCollection(func);
             return this;
         }
         public DataContractComparerBuilder RuleFor<T>(Func<T, T, bool> func)
         {
-            _rules.RuleFor(func);
+            _rulesContainer.RuleFor(func);
             return this;
         }
 
         public DataContractComparer Build()
         {
-            return new DataContractComparer(_objectExpander, _rules);
+            return new DataContractComparer(_objectExpander, _rulesContainer);
         }
     }
 }

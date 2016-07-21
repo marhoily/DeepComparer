@@ -43,7 +43,7 @@
     <Compile Include="CachingDictionary.cs" />
     <Compile Include="CollectionComparisonKind.cs" />
     <Compile Include="TreatObjectAs.cs" />
-    <Compile Include="CompareRules.cs" />
+    <Compile Include="RulesContainer.cs" />
     <Compile Include="DataContractComparer.cs" />
     <Compile Include="DataContractComparerBuilder.cs" />
     <Compile Include="EnumerableExt.cs" />
