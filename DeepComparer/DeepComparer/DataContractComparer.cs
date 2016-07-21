@@ -38,16 +38,14 @@ namespace DeepComparer
             _rules.Add(typeof(T), (x, y) => func((T)x, (T)y));
             return this;
         }
-        public bool Compare(object x, object y)
+        public bool Compare(object x, object y, Type formalType)
         {
             if (x == null && y == null)
                 return true;
             if (x == null || y == null)
                 return false;
-            var type = x.GetType();
-            if (y.GetType() != type)
-                return false;
-            foreach (var p in type.GetProperties().Where(_propSelector))
+
+            foreach (var p in formalType.GetProperties().Where(_propSelector))
             {
                 var xV = p.GetValue(x, null);
                 var yV = p.GetValue(y, null);
@@ -62,7 +60,7 @@ namespace DeepComparer
                 {
                     if (collection != null || customRule != null)
                         throw new Exception("Can't be both!");
-                    if (!Compare(xV, yV))
+                    if (!Compare(xV, yV, p.PropertyType))
                         return false;
                 }
                 else if (collection != null)
@@ -105,8 +103,10 @@ namespace DeepComparer
             switch (collection.ComparisonKind)
             {
                 case Equal:
-                    return CollectionEqual(xE, yE, 
-                        ShouldDelve(collection.ItemType) ?  Compare : ObjEquals);
+                    return CollectionEqual(xE, yE,
+                        ShouldDelve(collection.ItemType)
+                            ? (a, b) => Compare(a, b, collection.ItemType)
+                            : ObjEquals);
                 case Equivalent:
                     return CollectionEquivalent(xE, yE, collection.ItemType);
                 case EquivalentSkipDuplicates:

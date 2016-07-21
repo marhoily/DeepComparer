@@ -18,7 +18,7 @@ namespace Tests
         {
             _comparer
                 .RuleFor<int>((x, y) => Math.Abs(x - y) < 2)
-                .Compare(new X { I = 3 }, new X { I = 40 })
+                .Compare(new X { I = 3 }, new X { I = 40 }, typeof(X))
                 .Should().BeFalse();
         }
         [Fact]
@@ -26,7 +26,7 @@ namespace Tests
         {
             _comparer
                 .RuleFor<int>((x, y) => Math.Abs(x - y) < 2)
-                .Compare(new X { I = 3 }, new X { I = 40 })
+                .Compare(new X { I = 3 }, new X { I = 40 }, typeof(X))
                 .Should().BeFalse();
         }
         [Fact]

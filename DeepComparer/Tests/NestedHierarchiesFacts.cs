@@ -18,9 +18,9 @@ namespace Tests
         {
             var a = new X { Px = new X { I = 3 } };
             var b = new X { Px = new X { I = 3 } };
-            _comparer.Compare(a, b).Should().BeFalse();
+            _comparer.Compare(a, b, typeof(X)).Should().BeFalse();
             _comparer.DelveInto(p => p.HasAttribute<DataContractAttribute>())
-                .Compare(a, b).Should().BeTrue();
+                .Compare(a, b, typeof(X)).Should().BeTrue();
         }
         [Fact]
         public void Deep_Different()
@@ -28,7 +28,7 @@ namespace Tests
             var a = new X { Px = new X { I = 3 } };
             var b = new X { Px = new X { I = 4 } };
             _comparer.DelveInto(p => p.HasAttribute<DataContractAttribute>())
-                .Compare(a, b).Should().BeFalse();
+                .Compare(a, b, typeof(X)).Should().BeFalse();
         }
 
         [DataContract]
