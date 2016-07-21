@@ -9,8 +9,8 @@ namespace Tests
 {
     public sealed class CollectionFacts
     {
-        private readonly DataContractComparer _comparer =
-            new DataContractComparer();
+        private readonly DataContractComparerBuilder _comparer =
+            new DataContractComparerBuilder();
 
         private readonly X _x1 = new X();
         private readonly X _x2 = new X();
@@ -22,11 +22,12 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
-            _comparer.Compare(a, b, typeof(X)).Should().BeFalse();
+            _comparer.Build().Compare(a, b, typeof(X)).Should().BeFalse();
             _comparer
                 .DelveInto(t => t == typeof(X))
                 .TreatAsCollection(p => !p.IsArray ? null :
                     new CollectionDescriptor(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
+                .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }
         [Fact]
@@ -36,6 +37,7 @@ namespace Tests
             var b = new X { A = new[] { _x2 } };
             _comparer
                 .TreatAsCollection(Defaults.Array)
+                .Build()
                 .Compare(a, b, typeof(X)).Should().BeFalse();
         }
 
@@ -48,6 +50,7 @@ namespace Tests
                 .DelveInto(t => t == typeof(X))
                 .TreatAsCollection(Defaults.Array)
                 .TreatAsCollection(Defaults.List)
+                .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }
         [Fact]
@@ -58,6 +61,7 @@ namespace Tests
             _comparer
                 .DelveInto(t => t == typeof(X))
                 .TreatAsCollection(Defaults.Enumerable)
+                .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }
 

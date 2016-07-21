@@ -8,8 +8,8 @@ namespace Tests
 {
     public sealed class NestedHierarchiesFacts
     {
-        private readonly DataContractComparer _comparer =
-            new DataContractComparer();
+        private readonly DataContractComparerBuilder _comparer =
+            new DataContractComparerBuilder();
 
         private readonly Y _y1 = new Y();
 
@@ -18,8 +18,12 @@ namespace Tests
         {
             var a = new X { Px = new X { I = 3 } };
             var b = new X { Px = new X { I = 3 } };
-            _comparer.Compare(a, b, typeof(X)).Should().BeFalse();
-            _comparer.DelveInto(p => p.HasAttribute<DataContractAttribute>())
+            _comparer
+                .Build()
+                .Compare(a, b, typeof(X)).Should().BeFalse();
+            _comparer
+                .DelveInto(p => p.HasAttribute<DataContractAttribute>())
+                .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }
         [Fact]
@@ -28,6 +32,7 @@ namespace Tests
             var a = new X { Px = new X { I = 3 } };
             var b = new X { Px = new X { I = 4 } };
             _comparer.DelveInto(p => p.HasAttribute<DataContractAttribute>())
+                .Build()
                 .Compare(a, b, typeof(X)).Should().BeFalse();
         }
 
