@@ -24,10 +24,10 @@ namespace DeepComparer
                 Expand = expand;
             }
         }
-        public sealed class Expand : CompareOption { }
-        public static readonly CompareOption ExpandInstance = new Expand();
-        public sealed class Skip : CompareOption { }
-        public static readonly CompareOption SkipInstance = new Skip();
+        public sealed class ExpandOpt : CompareOption { }
+        public static readonly CompareOption Expand = new ExpandOpt();
+        public sealed class SkipOpt : CompareOption { }
+        public static readonly CompareOption Skip = new SkipOpt();
         public sealed class Custom : CompareOption
         {
             public FCompare Comparer { get; }
@@ -46,8 +46,8 @@ namespace DeepComparer
         public void DelveInto(Func<Type, bool> func)
         {
             _byFunc.Add(t => func(t)
-                ? CompareOption.ExpandInstance
-                : CompareOption.SkipInstance);
+                ? CompareOption.Expand
+                : CompareOption.Skip);
         }
         public void TreatAsCollection(Func<Type, CompareOption.Collection> func)
         {
@@ -56,7 +56,7 @@ namespace DeepComparer
         public void RuleFor<T>(Func<T, T, bool> func)
         {
             _byFunc.Add(t => t != typeof(T)
-                ? CompareOption.SkipInstance
+                ? CompareOption.Skip
                 : new CompareOption.Custom((x, y) =>
                 {
                     if (x == null && y == null)
@@ -66,6 +66,16 @@ namespace DeepComparer
                     return func((T) x, (T) y);
                 }));
         }
+        private CompareOption this[Type propertyType]
+        {
+            get
+            {
+                return _byFunc
+                    .Select(predicate => predicate(propertyType))
+                    .SingleOrDefault(x => x != CompareOption.Skip);
+            }
+        }
+
     }
     public sealed class DataContractComparerBuilder
     {
