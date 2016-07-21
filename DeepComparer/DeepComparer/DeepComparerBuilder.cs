@@ -3,6 +3,7 @@ using System.Reflection;
 
 namespace DeepComparison
 {
+    public delegate TreatObjectAs.Collection CollectionPredicate(Type type);
     public sealed class DeepComparerBuilder
     {
         private readonly ObjectExpander _objectExpander = new ObjectExpander();
@@ -13,12 +14,12 @@ namespace DeepComparison
             _objectExpander.SelectProperties(selector);
             return this;
         }
-        public DeepComparerBuilder ExpandObjects(Func<Type, bool> func)
+        public DeepComparerBuilder GoDeepFor(Func<Type, bool> func)
         {
             _rulesContainer.DelveInto(func);
             return this;
         }
-        public DeepComparerBuilder ExpandCollections(Func<Type, TreatObjectAs.Collection> func)
+        public DeepComparerBuilder GoDeepFor(CollectionPredicate func)
         {
             _rulesContainer.TreatAsCollection(func);
             return this;

@@ -9,7 +9,7 @@ namespace Tests
     {
         private readonly DeepComparer _comparer =
             new DeepComparerBuilder()
-                .ExpandObjects(t => t == typeof(X))
+                .GoDeepFor(t => t == typeof(X))
                 .CustomRuleFor<int>((x, y) => Math.Abs(x - y) < 2)
                 .Build();
 

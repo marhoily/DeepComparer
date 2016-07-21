@@ -12,10 +12,10 @@ namespace Tests
     {
         private readonly DeepComparerBuilder
             _builder = new DeepComparerBuilder()
-                .ExpandObjects(t => t == typeof(X));
+                .GoDeepFor(t => t == typeof(X));
 
         private readonly X _x1 = new X();
-        private readonly X _x2 = new X {S = new HashSet<X>()};
+        private readonly X _x2 = new X { S = new HashSet<X>() };
 
         [Fact]
         public void False_Unless_Expand()
@@ -31,9 +31,9 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
             _builder
-                .ExpandCollections(t => !t.IsArray ? null :
+                .GoDeepFor(t => !t.IsArray ? null :
                     new TreatObjectAs.Collection(
-                        Equal, 
+                        Equal,
                         t.GetElementType(),
                         x => (IEnumerable)x))
                 .Build()
@@ -44,8 +44,7 @@ namespace Tests
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x2 } };
-            _builder
-                .ExpandCollections(Defaults.Array)
+            _builder.GoDeepFor(Collections.Array)
                 .Build()
                 .Compare(a, b).Should().BeFalse();
         }
@@ -53,32 +52,31 @@ namespace Tests
         [Fact]
         public void Expand_Two()
         {
-            var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
+            var a = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             _builder
-                .ExpandCollections(Defaults.Array)
-                .ExpandCollections(Defaults.List)
+                .GoDeepFor(Collections.Array)
+                .GoDeepFor(Collections.List)
                 .Build()
                 .Compare(a, b).Should().BeTrue();
         }
         [Fact]
         public void Expand_Enumerable()
         {
-            var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
+            var a = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
-            _builder
-                .ExpandCollections(Defaults.Enumerable)
+            _builder.GoDeepFor(Collections.Enumerable)
                 .Build()
                 .Compare(a, b).Should().BeTrue();
         }
         [Fact]
         public void Expand_Ambiguity()
         {
-            var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
+            var a = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
             var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
-            Assert.Throws<InvalidOperationException>(()=>_builder
-                .ExpandCollections(Defaults.List)
-                .ExpandCollections(Defaults.Enumerable)
+            Assert.Throws<InvalidOperationException>(() => _builder
+                .GoDeepFor(Collections.List)
+                .GoDeepFor(Collections.Enumerable)
                 .Build()
                 .Compare(a, b).Should().BeTrue());
         }

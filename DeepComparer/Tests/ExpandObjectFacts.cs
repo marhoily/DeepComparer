@@ -10,7 +10,7 @@ namespace Tests
     {
         private readonly DeepComparer _comparer =
             new DeepComparerBuilder()
-                .ExpandObjects(t => t.HasAttribute<DataContractAttribute>())
+                .GoDeepFor(t => t.HasAttribute<DataContractAttribute>())
                 .SelectProperties(p => p.HasAttribute<DataMemberAttribute>())
                 .Build();
 

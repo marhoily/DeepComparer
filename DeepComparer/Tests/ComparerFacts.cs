@@ -38,7 +38,7 @@ namespace Tests
         public void ExpandObject_Example()
         {
             _builder
-                .ExpandObjects(t => t == typeof(X))
+                .GoDeepFor(t => t == typeof(X))
                 .Build()
                 .Compare(new X { I = 3 }, new X { I = 3 })
                 .Should().BeTrue();
@@ -46,7 +46,7 @@ namespace Tests
         [Fact]
         public void When_Different_Types_Should_False()
         {
-            _builder.ExpandObjects(t => t == typeof(X));
+            _builder.GoDeepFor(t => t == typeof(X));
             Assert.Throws<TargetException>(()
                 => _builder.Build().Compare(new X(), new Y(), typeof(X)));
         }

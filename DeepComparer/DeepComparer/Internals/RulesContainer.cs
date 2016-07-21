@@ -14,7 +14,7 @@ namespace DeepComparison
                 ? TreatObjectAs.PropertiesBag
                 : TreatObjectAs.Simple);
         }
-        public void TreatAsCollection(Func<Type, TreatObjectAs.Collection> func)
+        public void TreatAsCollection(CollectionPredicate func)
         {
             _byFunc.Add(x => func(x) ?? TreatObjectAs.Simple);
         }
