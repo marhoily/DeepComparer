@@ -33,12 +33,6 @@ namespace Tests
                 .Compare(new X { I = 3 }, new X { I = 40 }, typeof(X))
                 .Should().BeFalse();
         }
-        [Fact]
-        public void Custom_Twice()
-        {
-            _comparer.RuleFor<int>((x, y) => false);
-            Assert.Throws<ArgumentException>(
-                () => _comparer.RuleFor<int>((x, y) => false));
-        }
+
     }
 }

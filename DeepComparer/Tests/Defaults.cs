@@ -8,37 +8,37 @@ namespace Tests
 {
     public static class Defaults
     {
-        public static CollectionDescriptor Array(Type t)
+        public static CompareOption.Collection Array(Type t)
         {
-            return !t.IsArray ? null : new CollectionDescriptor(
+            return !t.IsArray ? null : new CompareOption.Collection(
                 CollectionComparisonKind.Equal, 
                 t.GetElementType(), x => (IEnumerable)x);
         }
-        public static CollectionDescriptor List(Type t)
+        public static CompareOption.Collection List(Type t)
         {
             if (!t.IsGenericType) return null;
             if (t.GetGenericTypeDefinition() != typeof(List<>)) return null;
-            return new CollectionDescriptor(
+            return new CompareOption.Collection(
                 CollectionComparisonKind.Equal, 
                 t.GetGenericArguments()[0], 
                 x => (IEnumerable)x);
         }
-        public static CollectionDescriptor HashSet(Type t)
+        public static CompareOption.Collection HashSet(Type t)
         {
             if (!t.IsGenericType) return null;
             if (t.GetGenericTypeDefinition() != typeof(HashSet<>)) return null;
-            return new CollectionDescriptor(
+            return new CompareOption.Collection(
                 CollectionComparisonKind.Equivalent, 
                 t.GetGenericArguments()[0], 
                 x => (IEnumerable)x);
         }
-        public static CollectionDescriptor Enumerable(Type t)
+        public static CompareOption.Collection Enumerable(Type t)
         {
             var ifc = t.GetInterfaces().SingleOrDefault(x =>
                 x.IsGenericType &&
                 x.GetGenericTypeDefinition() == typeof(IEnumerable<>));
             if (ifc == null) return null;
-            return new CollectionDescriptor(
+            return new CompareOption.Collection(
                 CollectionComparisonKind.Equal,
                 ifc.GetGenericArguments()[0],
                 x => (IEnumerable)x);

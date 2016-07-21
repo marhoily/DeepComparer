@@ -43,7 +43,11 @@
     <Compile Include="CachingDictionary.cs" />
     <Compile Include="CollectionComparisonKind.cs" />
     <Compile Include="CollectionDescriptor.cs" />
+    <Compile Include="CompareOption.cs" />
+    <Compile Include="CompareRules.cs" />
     <Compile Include="DataContractComparer.cs" />
+    <Compile Include="DataContractComparerBuilder.cs" />
+    <Compile Include="EnumerableExt.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
