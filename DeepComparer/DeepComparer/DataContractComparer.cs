@@ -1,35 +1,11 @@
 ﻿using System;
-using System.Linq;
-using System.Reflection;
 using static DeepComparer.CollectionComparisonKind;
 using static DeepComparer.CompareOption;
 
 namespace DeepComparer
 {
     using FCompare = Func<object, object, bool>;
-    using LCompare = Func<object, object, Type, bool>;
 
-    public sealed class ObjectExpander
-    {
-        private Func<PropertyInfo, bool> _propSelector = x => true;
-
-        public void SelectProperties(Func<PropertyInfo, bool> selector)
-        {
-            _propSelector = selector;
-        }
-        public bool CompareProperties(object x, object y, Type formalType, LCompare comparer)
-        {
-            if (x == null && y == null) return true;
-            if (x == null || y == null) return false;
-            return formalType
-                .GetProperties()
-                .Where(_propSelector)
-                .All(p => comparer(
-                    p.GetValue(x, null),
-                    p.GetValue(y, null),
-                    p.PropertyType));
-        }
-    }
     public sealed class DataContractComparer
     {
         private readonly ObjectExpander _objectExpander;
