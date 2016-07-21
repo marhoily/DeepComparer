@@ -27,15 +27,15 @@ namespace Tests
                 .Should().BeTrue();
         }
         [Fact]
-        public void When_Different_Prop_Should_False()
+        public void Do_Not_Expand_Objects_By_Default()
         {
             _builder
                 .Build()
-                .Compare(new X { I = 3 }, new X { I = 4 })
+                .Compare(new X { I = 3 }, new X { I = 3 })
                 .Should().BeFalse();
         }
         [Fact]
-        public void When_Same_Prop_Should_True()
+        public void ExpandObject_Example()
         {
             _builder
                 .ExpandObjects(t => t == typeof(X))

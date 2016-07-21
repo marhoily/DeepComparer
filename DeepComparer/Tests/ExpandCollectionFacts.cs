@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DeepComparison;
@@ -30,10 +31,10 @@ namespace Tests
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
             _builder
-                .ExpandCollections(p => !p.IsArray ? null :
+                .ExpandCollections(t => !t.IsArray ? null :
                     new TreatObjectAs.Collection(
                         Equal, 
-                        p.GetElementType(),
+                        t.GetElementType(),
                         x => (IEnumerable)x))
                 .Build()
                 .Compare(a, b).Should().BeTrue();
@@ -69,6 +70,17 @@ namespace Tests
                 .ExpandCollections(Defaults.Enumerable)
                 .Build()
                 .Compare(a, b).Should().BeTrue();
+        }
+        [Fact]
+        public void Expand_Ambiguity()
+        {
+            var a = new X { A = new[] { _x1 }, L = new List<X> {_x2} };
+            var b = new X { A = new[] { _x1 }, L = new List<X> { _x2 } };
+            Assert.Throws<InvalidOperationException>(()=>_builder
+                .ExpandCollections(Defaults.List)
+                .ExpandCollections(Defaults.Enumerable)
+                .Build()
+                .Compare(a, b).Should().BeTrue());
         }
 
         public class X
