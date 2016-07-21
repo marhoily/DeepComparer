@@ -9,6 +9,64 @@ namespace DeepComparer
 {
     using FCompare = Func<object, object, bool>;
 
+    public abstract class CompareOption
+    {
+        public sealed class Collection : CompareOption
+        {
+            public CollectionComparisonKind ComparisonKind { get; }
+            public Type ItemType { get; }
+            public Func<object, IEnumerable> Expand { get; }
+
+            public Collection(CollectionComparisonKind comparisonKind, Type itemType, Func<object, IEnumerable> expand)
+            {
+                ComparisonKind = comparisonKind;
+                ItemType = itemType;
+                Expand = expand;
+            }
+        }
+        public sealed class Expand : CompareOption { }
+        public static readonly CompareOption ExpandInstance = new Expand();
+        public sealed class Skip : CompareOption { }
+        public static readonly CompareOption SkipInstance = new Skip();
+        public sealed class Custom : CompareOption
+        {
+            public FCompare Comparer { get; }
+
+            public Custom(FCompare comparer)
+            {
+                Comparer = comparer;
+            }
+        }
+    }
+
+    public sealed class CompareRules
+    {
+        private readonly List<Func<Type, CompareOption>>
+            _byFunc = new List<Func<Type, CompareOption>>();
+        public void DelveInto(Func<Type, bool> func)
+        {
+            _byFunc.Add(t => func(t)
+                ? CompareOption.ExpandInstance
+                : CompareOption.SkipInstance);
+        }
+        public void TreatAsCollection(Func<Type, CompareOption.Collection> func)
+        {
+            _byFunc.Add(func);
+        }
+        public void RuleFor<T>(Func<T, T, bool> func)
+        {
+            _byFunc.Add(t => t != typeof(T)
+                ? CompareOption.SkipInstance
+                : new CompareOption.Custom((x, y) =>
+                {
+                    if (x == null && y == null)
+                        return true;
+                    if (x == null || y == null)
+                        return false;
+                    return func((T) x, (T) y);
+                }));
+        }
+    }
     public sealed class DataContractComparerBuilder
     {
         private Func<PropertyInfo, bool> _propSelector = x => true;
