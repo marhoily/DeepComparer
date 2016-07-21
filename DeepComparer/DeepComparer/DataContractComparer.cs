@@ -11,13 +11,12 @@ namespace DeepComparer
 
     public sealed class ObjectExpander
     {
-        private readonly Func<PropertyInfo, bool> _propSelector;
+        private Func<PropertyInfo, bool> _propSelector = x => true;
 
-        public ObjectExpander(Func<PropertyInfo, bool> propSelector)
+        public void SelectProperties(Func<PropertyInfo, bool> selector)
         {
-            _propSelector = propSelector;
+            _propSelector = selector;
         }
-
         public bool CompareProperties(object x, object y, Type formalType, LCompare comparer)
         {
             if (x == null && y == null) return true;

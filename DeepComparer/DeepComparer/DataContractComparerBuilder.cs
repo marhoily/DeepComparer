@@ -5,12 +5,12 @@ namespace DeepComparer
 {
     public sealed class DataContractComparerBuilder
     {
-        private Func<PropertyInfo, bool> _propSelector = x => true;
+        private readonly ObjectExpander _objectExpander = new ObjectExpander();
         private readonly CompareRules _rules = new CompareRules();
 
         public DataContractComparerBuilder SelectProperties(Func<PropertyInfo, bool> selector)
         {
-            _propSelector = selector;
+            _objectExpander.SelectProperties(selector);
             return this;
         }
         public DataContractComparerBuilder DelveInto(Func<Type, bool> func)
@@ -31,8 +31,7 @@ namespace DeepComparer
 
         public DataContractComparer Build()
         {
-            return new DataContractComparer(
-                new ObjectExpander(_propSelector), _rules);
+            return new DataContractComparer(_objectExpander, _rules);
         }
     }
 }
