@@ -4,7 +4,7 @@
     <id>DeepComparison</id>
     <version>$version$</version>
     <authors>Ilya Margolin</authors>
-    <projectUrl>https://github.com/marhoily/DeepComparer </projectUrl>
+    <projectUrl>https://github.com/marhoily/DeepComparison</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>Deep comparison of .net objects</summary>
     <description>Deep equal library done right</description>

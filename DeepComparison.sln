@@ -8,7 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{60E894EC-9875-4C99-A569-330CCC611D5E}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
-		DeepComparison.nuspec = DeepComparison.nuspec
+		DeepComparison\DeepComparison.nuspec = DeepComparison\DeepComparison.nuspec
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeepComparison", "DeepComparison\DeepComparison.csproj", "{1248EA7B-35DF-4EE2-9B67-3E82E9A42414}"
