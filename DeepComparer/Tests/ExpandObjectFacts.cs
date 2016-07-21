@@ -11,35 +11,35 @@ namespace Tests
         private readonly DeepComparer _comparer =
             new DeepComparerBuilder()
                 .GoDeepFor(t => t.HasAttribute<DataContractAttribute>())
-                .SelectProperties(p => p.HasAttribute<DataMemberAttribute>())
+                .FilterProperties(p => p.HasAttribute<DataMemberAttribute>())
                 .Build();
 
         [Fact]
-        public void Should_Select_Properties()
+        public void Should_Compare_Filtered_Properties()
         {
-            var a = new X { I = 2 };
-            var b = new X { I = 3 };
+            var a = new X { In = 2 };
+            var b = new X { In = 3 };
             _comparer.Compare(a, b).Should().BeFalse();
         }
         [Fact]
-        public void Should_Not_Care_For_Others()
+        public void ShouldNot_Compare_Ignored_Properties()
         {
-            var a = new X { J = 3 };
-            var b = new X { J = 2 };
+            var a = new X { Out = 3 };
+            var b = new X { Out = 2 };
             _comparer.Compare(a, b).Should().BeTrue();
         }
         [Fact]
-        public void Deep_Equal()
+        public void Should_GoDeepFor_Objects()
         {
-            var a = new X { Px = new X { I = 3 } };
-            var b = new X { Px = new X { I = 3 } };
+            var a = new X { Px = new X { In = 3 } };
+            var b = new X { Px = new X { In = 3 } };
             _comparer.Compare(a, b).Should().BeTrue();
         }
         [Fact]
         public void Deep_Different()
         {
-            var a = new X { Px = new X { I = 3 } };
-            var b = new X { Px = new X { I = 4 } };
+            var a = new X { Px = new X { In = 3 } };
+            var b = new X { Px = new X { In = 4 } };
             _comparer.Compare(a, b).Should().BeFalse();
         }
 
@@ -49,8 +49,8 @@ namespace Tests
             [DataMember]
             public X Px { get; set; }
             [DataMember]
-            public int I { get; set; }
-            public int J { get; set; }
+            public int In { get; set; }
+            public int Out { get; set; }
         }
     }
 }

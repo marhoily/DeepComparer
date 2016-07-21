@@ -9,7 +9,7 @@ namespace DeepComparison
         private readonly ObjectExpander _objectExpander = new ObjectExpander();
         private readonly RulesContainer _rulesContainer = new RulesContainer();
 
-        public DeepComparerBuilder SelectProperties(Func<PropertyInfo, bool> selector)
+        public DeepComparerBuilder FilterProperties(Func<PropertyInfo, bool> selector)
         {
             _objectExpander.SelectProperties(selector);
             return this;

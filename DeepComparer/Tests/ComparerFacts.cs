@@ -11,26 +11,16 @@ namespace Tests
             new DeepComparerBuilder();
 
         [Fact]
-        public void Null_And_NonNull_Should_False()
+        public void PassNull()
         {
-            _builder
-                .Build()
-                .Compare(null, new X { I = 3 })
-                .Should().BeFalse();
-        }
-        [Fact]
-        public void Null_And_Null_Should_False()
-        {
-            _builder
-                .Build()
-                .Compare<X>(null, null)
-                .Should().BeTrue();
+            var notNull = new X { I = 3 };
+            _builder.Build().Compare(null, notNull).Should().BeFalse();
+            _builder.Build().Compare<X>(null, null).Should().BeTrue();
         }
         [Fact]
         public void Do_Not_Expand_Objects_By_Default()
         {
-            _builder
-                .Build()
+            _builder.Build()
                 .Compare(new X { I = 3 }, new X { I = 3 })
                 .Should().BeFalse();
         }
@@ -44,7 +34,7 @@ namespace Tests
                 .Should().BeTrue();
         }
         [Fact]
-        public void When_Different_Types_Should_False()
+        public void When_Different_Types_Should_Throw()
         {
             _builder.GoDeepFor(t => t == typeof(X));
             Assert.Throws<TargetException>(()

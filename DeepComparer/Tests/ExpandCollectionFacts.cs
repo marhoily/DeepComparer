@@ -18,15 +18,24 @@ namespace Tests
         private readonly X _x2 = new X { S = new HashSet<X>() };
 
         [Fact]
-        public void False_Unless_Expand()
+        public void DoNot_GoDeepFor_Collections_ByDefault()
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
             _builder.Build().Compare(a, b).Should().BeFalse();
+        }
 
+        [Fact]
+        public void GoDeepFor_Collections_Example()
+        {
+            var a = new X { A = new[] { _x1 } };
+            var b = new X { A = new[] { _x2 } };
+            _builder.GoDeepFor(Collections.Array)
+                .Build()
+                .Compare(a, b).Should().BeFalse();
         }
         [Fact]
-        public void True_When_Expanded()
+        public void Full_Syntax()
         {
             var a = new X { A = new[] { _x1 } };
             var b = new X { A = new[] { _x1 } };
@@ -39,16 +48,6 @@ namespace Tests
                 .Build()
                 .Compare(a, b).Should().BeTrue();
         }
-        [Fact]
-        public void Deep_Unequal()
-        {
-            var a = new X { A = new[] { _x1 } };
-            var b = new X { A = new[] { _x2 } };
-            _builder.GoDeepFor(Collections.Array)
-                .Build()
-                .Compare(a, b).Should().BeFalse();
-        }
-
         [Fact]
         public void Expand_Two()
         {
@@ -79,6 +78,44 @@ namespace Tests
                 .GoDeepFor(Collections.Enumerable)
                 .Build()
                 .Compare(a, b).Should().BeTrue());
+        }
+
+        [Fact]
+        public void Collection_Different_Elements()
+        {
+            var a = new X { A = new[] { _x1 } };
+            var b = new X { A = new[] { _x2 } };
+            _builder.GoDeepFor(Collections.Array)
+                .Build()
+                .Compare(a, b).Should().BeFalse();
+        }
+        [Fact]
+        public void Collection_Different_Sizes()
+        {
+            var a = new X { A = new[] { _x1 } };
+            var b = new X { A = new X[0]  };
+            _builder.GoDeepFor(Collections.Array)
+                .Build()
+                .Compare(a, b).Should().BeFalse();
+        }
+        [Fact]
+        public void Collection_Null_Element()
+        {
+            var a = new X { A = new[] { _x1 } };
+            var b = new X { A = new X[] { null } };
+            _builder.GoDeepFor(Collections.Array)
+                .Build()
+                .Compare(a, b).Should().BeFalse();
+        }
+
+        [Fact]
+        public void Collection_Null_Elements_Equal()
+        {
+            var a = new X { A = new X[] { null } };
+            var b = new X { A = new X[] { null } };
+            _builder.GoDeepFor(Collections.Array)
+                .Build()
+                .Compare(a, b).Should().BeTrue();
         }
 
         public class X
