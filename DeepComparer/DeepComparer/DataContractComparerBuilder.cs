@@ -32,7 +32,7 @@ namespace DeepComparer
         public DataContractComparer Build()
         {
             return new DataContractComparer(
-                _propSelector, _rules);
+                new ObjectExpander(_propSelector), _rules);
         }
     }
 }
