@@ -6,23 +6,23 @@ namespace DeepComparer
 {
     public sealed class CompareRules
     {
-        private readonly List<Func<Type, CompareOption>>
-            _byFunc = new List<Func<Type, CompareOption>>();
+        private readonly List<Func<Type, TreatObjectAs>>
+            _byFunc = new List<Func<Type, TreatObjectAs>>();
         public void DelveInto(Func<Type, bool> func)
         {
             _byFunc.Add(t => func(t)
-                ? CompareOption.Expand
-                : CompareOption.Skip);
+                ? TreatObjectAs.PropertiesBag
+                : TreatObjectAs.Simple);
         }
-        public void TreatAsCollection(Func<Type, CompareOption.Collection> func)
+        public void TreatAsCollection(Func<Type, TreatObjectAs.Collection> func)
         {
-            _byFunc.Add(x => func(x) ?? CompareOption.Skip);
+            _byFunc.Add(x => func(x) ?? TreatObjectAs.Simple);
         }
         public void RuleFor<T>(Func<T, T, bool> func)
         {
             _byFunc.Add(t => t != typeof(T)
-                ? CompareOption.Skip
-                : new CompareOption.Custom((x, y) =>
+                ? TreatObjectAs.Simple
+                : new TreatObjectAs.Custom((x, y) =>
                 {
                     if (x == null && y == null) return true;
                     if (x == null || y == null) return false;
@@ -30,14 +30,14 @@ namespace DeepComparer
                 }));
         }
 
-        public CompareOption this[Type propertyType]
+        public TreatObjectAs this[Type propertyType]
         {
             get
             {
                 return _byFunc
                     .Select(predicate => predicate(propertyType))
-                    .SingleOrDefault(x => x != CompareOption.Skip)
-                       ?? CompareOption.Skip;
+                    .SingleOrDefault(x => x != TreatObjectAs.Simple)
+                       ?? TreatObjectAs.Simple;
             }
         }
 

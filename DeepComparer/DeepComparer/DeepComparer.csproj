@@ -42,7 +42,7 @@
   <ItemGroup>
     <Compile Include="CachingDictionary.cs" />
     <Compile Include="CollectionComparisonKind.cs" />
-    <Compile Include="CompareOption.cs" />
+    <Compile Include="TreatObjectAs.cs" />
     <Compile Include="CompareRules.cs" />
     <Compile Include="DataContractComparer.cs" />
     <Compile Include="DataContractComparerBuilder.cs" />

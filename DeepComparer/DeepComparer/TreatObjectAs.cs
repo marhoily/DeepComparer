@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace DeepComparer
 {
-    public abstract class CompareOption
+    public abstract class TreatObjectAs
     {
-        public sealed class Collection : CompareOption
+        public sealed class Collection : TreatObjectAs
         {
             public CollectionComparisonKind ComparisonKind { get; }
             public Type ItemType { get; }
@@ -18,11 +18,7 @@ namespace DeepComparer
                 ToEnumerable = expand;
             }
         }
-        public sealed class ExpandOpt : CompareOption { }
-        public static readonly CompareOption Expand = new ExpandOpt();
-        public sealed class SkipOpt : CompareOption { }
-        public static readonly CompareOption Skip = new SkipOpt();
-        public sealed class Custom : CompareOption
+        public sealed class Custom : TreatObjectAs
         {
             public Func<object, object, bool> Comparer { get; }
 
@@ -31,5 +27,9 @@ namespace DeepComparer
                 Comparer = comparer;
             }
         }
+
+        private sealed class Special : TreatObjectAs { }
+        public static readonly TreatObjectAs PropertiesBag = new Special();
+        public static readonly TreatObjectAs Simple = new Special();
     }
 }

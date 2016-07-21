@@ -18,7 +18,7 @@ namespace DeepComparer
             _rules.DelveInto(func);
             return this;
         }
-        public DataContractComparerBuilder TreatAsCollection(Func<Type, CompareOption.Collection> func)
+        public DataContractComparerBuilder TreatAsCollection(Func<Type, TreatObjectAs.Collection> func)
         {
             _rules.TreatAsCollection(func);
             return this;

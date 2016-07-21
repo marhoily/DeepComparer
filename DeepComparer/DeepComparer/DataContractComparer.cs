@@ -1,6 +1,6 @@
 ﻿using System;
 using static DeepComparer.CollectionComparisonKind;
-using static DeepComparer.CompareOption;
+using static DeepComparer.TreatObjectAs;
 
 namespace DeepComparer
 {
@@ -28,7 +28,7 @@ namespace DeepComparer
         private FCompare GetComparer(Type formalType)
         {
             var compareOption = _rules[formalType];
-            if (compareOption == Expand)
+            if (compareOption == PropertiesBag)
                 return (x, y) => _objectExpander.CompareProperties(x, y, formalType, Compare);
             var collection = compareOption as Collection;
             if (collection != null)

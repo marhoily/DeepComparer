@@ -26,7 +26,7 @@ namespace Tests
             _comparer
                 .DelveInto(t => t == typeof(X))
                 .TreatAsCollection(p => !p.IsArray ? null :
-                    new CompareOption.Collection(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
+                    new TreatObjectAs.Collection(CollectionComparisonKind.Equal, p.GetElementType(), x => (IEnumerable)x))
                 .Build()
                 .Compare(a, b, typeof(X)).Should().BeTrue();
         }
