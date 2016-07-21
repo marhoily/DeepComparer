@@ -9,13 +9,13 @@ namespace DeepComparer
         {
             public CollectionComparisonKind ComparisonKind { get; }
             public Type ItemType { get; }
-            public Func<object, IEnumerable> Expand { get; }
+            public Func<object, IEnumerable> ToEnumerable { get; }
 
             public Collection(CollectionComparisonKind comparisonKind, Type itemType, Func<object, IEnumerable> expand)
             {
                 ComparisonKind = comparisonKind;
                 ItemType = itemType;
-                Expand = expand;
+                ToEnumerable = expand;
             }
         }
         public sealed class ExpandOpt : CompareOption { }

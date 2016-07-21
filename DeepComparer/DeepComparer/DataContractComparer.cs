@@ -41,8 +41,8 @@ namespace DeepComparer
         {
             if (x == null && y == null) return true;
             if (x == null || y == null) return false;
-            var xE = collection.Expand(x);
-            var yE = collection.Expand(y);
+            var xE = collection.ToEnumerable(x);
+            var yE = collection.ToEnumerable(y);
             if (collection.ComparisonKind == Equal)
                 return xE.SequenceEqual(yE, _cache.Get(collection.ItemType));
             throw new NotImplementedException();
