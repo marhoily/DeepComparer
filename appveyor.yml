@@ -10,6 +10,12 @@ assembly_info:
 configuration:
   - Release
 
+before_build:
+  nuget restore Tests\packages.config
+
+cache:
+  - packages -> **\packages.config
+
 after_test:
   - nuget pack DeepComparison\DeepComparison.nuspec -Version "%APPVEYOR_BUILD_VERSION%"
 
