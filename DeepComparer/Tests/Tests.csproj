@@ -69,7 +69,6 @@
     <Compile Include="CustomFacts.cs" />
     <Compile Include="DataContractComparerFacts.cs" />
     <Compile Include="Defaults.cs" />
-    <Compile Include="NestedHierarchiesFacts.cs" />
     <Compile Include="ExpandObjectFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
